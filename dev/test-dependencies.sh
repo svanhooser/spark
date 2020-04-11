@@ -51,7 +51,7 @@ if [ $? != 0 ]; then
     exit 1
 fi
 set -e
-TEMP_VERSION="spark-$(python2 -S -c "import random; print(random.randrange(100000, 999999))")"
+TEMP_VERSION="spark-$(python -S -c "import random; print(random.randrange(100000, 999999))")"
 
 function reset_version {
   # Delete the temporary POMs that we wrote to the local Maven repo:
