@@ -34,6 +34,9 @@ RUN mkdir -p /usr/share/man/man1 \
     openjdk-8-jdk rsync pandoc pandoc-citeproc flake8 tzdata \
   && rm -rf /var/lib/apt/lists/*
 
+# Make python command default to python2
+RUN sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 0
+
 # If you update java, make sure this aligns
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
@@ -109,9 +112,10 @@ WORKDIR $CIRCLE_HOME
 ENV CONDA_ROOT=$CIRCLE_HOME/miniconda
 ENV CONDA_BIN=$CIRCLE_HOME/miniconda/bin/conda
 ENV MINICONDA2_VERSION=4.5.11
-RUN curl -sO https://repo.continuum.io/miniconda/Miniconda2-${MINICONDA2_VERSION}-Linux-x86_64.sh \
+
+RUN curl -sO https://repo.anaconda.com/miniconda/Miniconda2-${MINICONDA2_VERSION}-Linux-x86_64.sh \
   && bash Miniconda2-${MINICONDA2_VERSION}-Linux-x86_64.sh -b -p ${CONDA_ROOT} \
-  && $CONDA_BIN clean --all \
+  && $CONDA_BIN clean --all --yes \
   && sudo mkdir -m 777 /home/.conda \
   && rm -f Miniconda2-${MINICONDA2_VERSION}-Linux-x86_64.sh
 
