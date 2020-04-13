@@ -1993,6 +1993,22 @@ class DataFrame(object):
         [Row(age2=2, name=u'Alice'), Row(age2=5, name=u'Bob')]
         """
         return DataFrame(self._jdf.withColumnRenamed(existing, new), self.sql_ctx)
+    
+    @ignore_unicode_prefix
+    @since(1.3)
+    def withColumnsPrefixed(self, prefix_str=""):
+        """Returns a new :class:`DataFrame` by renaming all existing columns with a prefix.
+
+        :param prefix_str: string, prefix to add to each column name
+
+        >>> df.withColumnsPrefixed('prefix_').collect()
+        [Row(prefix_age=2, name=u'Alice'), Row(prefix_age=5, name=u'Bob')]
+        """
+        self_jdf = self._jdf
+        for existing_column_name in self_jdf.columns:
+            self_jdf = self_jdf.withColumnRenamed(existing_column_name, prefix_str + existing_column_name)
+
+        return DataFrame(self_jdf, self.sql_ctx)
 
     @since(1.4)
     @ignore_unicode_prefix
